@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Sender</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+
+  </head>
+<body class="container mt-5">
+<div class="rounded p-3 mb-2 bg-primary text-white ">
+  <h2 class="mb-4 text-center ">Email Sender</h2>
+
+  <form id="emailForm">
+    <div class="form-group">
+      <label for="to">To:</label>
+      <input type="email" class="form-control" id="to" name="to" required>
+    </div>
+
+    <div class="form-group">
+      <label for="cc">CC:</label>
+      <input type="text" class="form-control" id="cc" name="cc">
+    </div>
+
+    <div class="form-group">
+      <label for="bcc">BCC:</label>
+      <input type="text" class="form-control" id="bcc" name="bcc">
+    </div>
+
+    <div class="form-group">
+      <label for="subject">Subject:</label>
+      <input type="text" class="form-control" id="subject" name="subject" required>
+    </div>
+
+    <div class="form-group">
+      <label for="text">Text:</label>
+      <textarea class="form-control" id="text" name="text" rows="4" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="html">HTML:</label>
+      <textarea class="form-control" id="html" name="html" rows="4"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="attachments">Attachments:</label>
+      <input type="file" class="form-control-file" id="attachments" name="attachments" multiple>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="sendEmail()">Send Email</button>
+  </form>
+
+ 
+
+  <script>
+    async function sendEmail() {
+      const form = document.getElementById('emailForm');
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('http://localhost:3000/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(Object.fromEntries(formData)),
+          //Here I am converting Json(javascript object) into string so that it is readable by the form
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Email sent successfully!');
+        } else {
+          alert(`Error sending email`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An unexpected error occurred.');
+      }
+    }
+  </script>
+</div>
+</body>
+</html>
